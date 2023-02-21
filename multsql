@@ -1,0 +1,93 @@
+#!/usr/bin/env python2
+
+import argparse
+import subprocess
+import os
+
+hosts = (os.environ['mals11'], os.environ['mals12'], os.environ['mals13'],
+         os.environ['mals16'], os.environ['mals24'], os.environ['mals36'],
+         os.environ['mals39']
+         )
+
+def get_args():
+    # Create the parser
+    my_parser = argparse.ArgumentParser(description='Run SQLs on multiple servers at once\
+                                         \n\nex. /opt 500\n    /opt ',
+                                         formatter_class=argparse.RawDescriptionHelpFormatter
+                                         )  #, allow_abbrev=False)
+
+    # Add arguments
+    my_parser.add_argument('-S', metavar='Server',
+                           nargs="+", default=['mals11', 'mals12', 'mals13',
+                                               'mals16', 'mals24', 'mals36',
+                                               'mals39'
+                                              ],
+                           help='Server to run SQL on'
+                          )
+    my_parser.add_argument('-F', metavar='Query file',
+                           help='SQL file',
+                           nargs='+'
+                          )
+
+    my_parser.add_argument('-D', metavar='Database', choices=['p2db', 'supply', 'master'],
+                            help='Database to run query in'
+                          )
+
+    # Parse all args from CLI
+    args = my_parser.parse_args()
+    query = args.F
+    hosts = [(os.environ[host]) for host in args.S]
+    db = args.D
+    return query, hosts, db 
+    
+def push_file(query, hosts):
+    for host in hosts:
+        for sql in query:
+            subprocess.call(['scp', '-q', sql, host + ':/tmp/'])            
+            #print(host, sql) #insert push subprocess HERE
+
+def run_sql(query, hosts, db):
+    if db == 'master':
+        user = 'sybbtusr'
+        cmd = "'`cat crr` '"
+    else:
+        user = 'ssabtusr'
+        cmd = "'`cat pd` '"
+
+    for host in hosts:
+        for sql in query:
+            infile = '/tmp/' + sql
+            outfile = '/tmp/' + sql + '.out' 
+            #subprocess.call(['ssh', '-qt', host, "cat ~/val | sudo -S echo -n "" &> /dev/null; sudo su - sybase -c 'isql -U'" + user + "' -P'" + cmd + "'-D'" + db])
+            subprocess.call(['ssh', '-qt', host, "cat ~/val | sudo -S echo -n "" &> /dev/null; sudo chmod 777 /tmp/"
+                             + sql + "; sudo su - sybase -c 'isql -U'" + user + "' -P`cat pd` -D'" 
+                             + db + "' -i '" + infile + "' -o '" + outfile])
+                             
+            #print( host +'\n-o /tmp/' + sql + '.out', db, user) # insert run subprocess HERE
+
+def pull(query, hosts):
+    for host in hosts:
+        for sql in query:
+            outfile = '/tmp/' + sql + '.out'
+            subprocess.call(['ssh', '-qt', host, "cat ~/val | sudo -S echo -n "" &> /dev/null; sudo chmod 666 " + outfile])
+            os.system('ssh -q ' + host + ' cat ' + outfile + ' >> $HOME/test456.out')
+#            subprocess.call(['ssh', '-q', host, 'cat',  outfile, ' >> $HOME/test456.out'])
+#            print('ssh -q ' + host + 'cat /tmp/' + sql + '.out  >>  $HOME/test123.out')
+
+#def clean():
+
+
+def main():
+    query, hosts, db  = get_args()    
+    push_file(query, hosts)
+    run_sql(query, hosts, db)
+    pull(query, hosts)
+        
+
+
+if __name__ == '__main__':
+    #argv = None
+    #args = get_args(argv)
+    main()    
+        
+    #main(args)
