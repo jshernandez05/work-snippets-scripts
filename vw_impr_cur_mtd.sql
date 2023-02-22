@@ -7,11 +7,11 @@ go
 
 create view vw_impr_cur_mtd as
 
--- $Author:   hernandezjs  $
--- $Workfile:   vw_impr_cur_mtd.sql  $
--- $Revision:   1.0  $
--- $Description: displays current month's IMPR data. $
--- $	Shamelessly stolen from Mario Tejeda's IMPR Dashboard SQL. $
+-- Author:   hernandezjs
+-- Workfile:   vw_impr_cur_mtd.sql
+-- Revision:   1.0  $
+-- Description: displays current month's IMPR data.
+-- Used to feed Wing IMPR Dashboard.
 
 select
 	da01_organizatn.org_nm + ' / ' + da01_organizatn.uic as 'unit',

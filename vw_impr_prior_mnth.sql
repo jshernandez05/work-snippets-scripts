@@ -10,8 +10,8 @@ create view vw_impr_prior_mnth as
 -- $Author:   hernandezjs  $
 -- $Workfile:   vw_impr_prior_mnth.sql  $
 -- $Revision:   1.0  $
--- $Description: displays previous month's IMPR data. $
--- $	Shamelessly stolen from Mario Tejeda's IMPR Dashboard SQL. $
+-- Description: displays current month's IMPR data.
+-- Used to feed Wing IMPR Dashboard.
 
 select
 	da01_organizatn.org_nm + ' / ' + da01_organizatn.uic as 'unit',
