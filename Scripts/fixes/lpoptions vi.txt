@@ -1,0 +1,1 @@
+Default 700_ordnancejob-sheets=none wrap=false landscape=true page-left=36pt cpi=14 lpi=8.25

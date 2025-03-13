@@ -1,0 +1,34 @@
+###OLD COMMAND###
+
+cd /opt/isec/ens/threatprevention/bin
+
+./isecav --setoasglobalconfig --oas off
+
+
+
+
+ENSLTP 10.6.6 and later:
+To stop the ENSLTP service, run the following commands:
+ 
+/opt/McAfee/ens/tp/init/mfetpd-control.sh stop
+/opt/McAfee/ens/esp/init/mfeespd-control.sh stop
+ 
+To start the ENSLTP service, run the following commands:
+ 
+/opt/McAfee/ens/esp/init/mfeespd-control.sh start
+/opt/McAfee/ens/tp/init/mfetpd-control.sh start
+ 
+To check the status of the ENSLTP service, run the following commands:
+ 
+/opt/McAfee/ens/tp/init/mfetpd-control.sh status
+/opt/McAfee/ens/esp/init/mfeespd-control.sh status
+ 
+To disable the ENSLTP service, run the following commands:
+
+/opt/McAfee/ens/tp/init/mfetpd-control.sh disable
+/opt/McAfee/ens/esp/init/mfeespd-control.sh disable
+ 
+To enable the ENSLTP service, run the following commands:
+
+/opt/McAfee/ens/tp/init/mfetpd-control.sh enable
+/opt/McAfee/ens/esp/init/mfeespd-control.sh enable

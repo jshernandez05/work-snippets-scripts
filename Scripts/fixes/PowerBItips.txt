@@ -1,0 +1,16 @@
+Power BI
+
+***********************************
+Step 1 - CleanUp Table/DataSource Names
+Step 2 - CleanUp ColumnNames
+Step 3 - CleanUp Data (Remove unused columns, Combine Tables with same data into one, Check/Change data types
+Step 4 - Build Date Table if needed(Use pre-built script)
+Step 5 - Organize Queries (Group into Data Model Queries, Paramater Queries, Supporting Queries)
+Step 6 - Add advanced queries if needed(web queries, merged queries, etc..)
+
+Step 7 - Transfer data to Data Model
+
+
+
+
+

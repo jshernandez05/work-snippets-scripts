@@ -1,0 +1,154 @@
+mkdir c:\users\%username%\desktop\SQ_CERT_FILES
+
+net use f: \\MALS36IMA\C$\WINDOWS\SYSTEM32\DRIVERS\ETC /user:spawarmgr W1n$FlexW1n$Flex
+
+copy \\MALS36IMA\c$\certs\MALS36IMA.crt c:\users\%username%\desktop\SQ_CERT_FILES
+
+net use g: \\MALS36UDP\C$\WINDOWS\SYSTEM32\DRIVERS\ETC /user:spawarmgr W1n$FlexW1n$Flex
+
+copy \\MALS36UDP\c$\certs\MALS36UDP.crt c:\users\%username%\desktop\SQ_CERT_FILES
+
+net use i: \\MWSS172\C$\WINDOWS\SYSTEM32\DRIVERS\ETC /user:spawarmgr W1n$FlexW1n$Flex
+
+copy \\MWSS172\c$\certs\MWSS172.crt c:\users\%username%\desktop\SQ_CERT_FILES
+
+net use k: \\MACS4DETA\C$\WINDOWS\SYSTEM32\DRIVERS\ETC /user:spawarmgr W1n$FlexW1n$Flex
+
+copy \\MACS4DETA\c$\certs\MACS4DETA.crt c:\users\%username%\desktop\SQ_CERT_FILES
+
+net use l: \\VMM262\C$\WINDOWS\SYSTEM32\DRIVERS\ETC /user:spawarmgr W1n$FlexW1n$Flex
+
+copy \\VMM262\c$\certs\VMM262.crt c:\users\%username%\desktop\SQ_CERT_FILES
+
+net use m: \\VMM265\C$\WINDOWS\SYSTEM32\DRIVERS\ETC /user:spawarmgr W1n$FlexW1n$Flex
+
+copy \\VMM265\c$\certs\VMM265.crt c:\users\%username%\desktop\SQ_CERT_FILES
+
+ 
+
+findstr /x /c:"138.168.90.9 nalc.mals36.mcdsus.mcds.usmc.mil nalc" f:\hosts >nul ||  echo 138.168.90.9 nalc.mals36.mcdsus.mcds.usmc.mil nalc >> f:\hosts
+
+findstr /x /c:"138.168.90.9 nalc.mals36.mcdsus.mcds.usmc.mil nalc" g:\hosts >nul ||  echo 138.168.90.9 nalc.mals36.mcdsus.mcds.usmc.mil nalc >> h:\hosts
+
+findstr /x /c:"138.168.90.9 nalc.mals36.mcdsus.mcds.usmc.mil nalc" i:\hosts >nul ||  echo 138.168.90.9 nalc.mals36.mcdsus.mcds.usmc.mil nalc >> i:\hosts
+
+findstr /x /c:"138.168.90.9 nalc.mals36.mcdsus.mcds.usmc.mil nalc" k:\hosts >nul ||  echo 138.168.90.9 nalc.mals36.mcdsus.mcds.usmc.mil nalc >> k:\hosts
+
+findstr /x /c:"138.168.90.9 nalc.mals36.mcdsus.mcds.usmc.mil nalc" l:\hosts >nul ||  echo 138.168.90.9 nalc.mals36.mcdsus.mcds.usmc.mil nalc >> l:\hosts
+
+findstr /x /c:"138.168.90.9 nalc.mals36.mcdsus.mcds.usmc.mil nalc" m:\hosts >nul ||  echo 138.168.90.9 nalc.mals36.mcdsus.mcds.usmc.mil nalc >> m:\hosts
+
+
+Get-Content f:\hosts | where { $_ -ne '138.168.90.9	nalc.mals36.ntcss.nmci.usmc.mil	nalc' } | Out-File f:\hosts
+
+Get-Content f:\hosts | where { $_ -ne '138.168.90.9	nalc.mals36.ntcss.nmci.usmc.mil	nalc' } | Out-File g:\hosts
+
+Get-Content f:\hosts | where { $_ -ne '138.168.90.9	nalc.mals36.ntcss.nmci.usmc.mil	nalc' } | Out-File i:\hosts
+
+Get-Content f:\hosts | where { $_ -ne '138.168.90.9	nalc.mals36.ntcss.nmci.usmc.mil	nalc' } | Out-File k:\hosts
+
+Get-Content f:\hosts | where { $_ -ne '138.168.90.9	nalc.mals36.ntcss.nmci.usmc.mil	nalc' } | Out-File l:\hosts
+
+Get-Content f:\hosts | where { $_ -ne '138.168.90.9	nalc.mals36.ntcss.nmci.usmc.mil	nalc' } | Out-File m:\hosts
+
+
+echo "Verify NALC hosts file entry from all the drive letters,  then Press any key to disconnect all network drives"
+
+pause
+
+ 
+
+net use f: /delete /Y
+
+net use g: /delete /Y
+
+net use i: /delete /Y
+
+net use k: /delete /Y
+
+#net use l: /delete /Y
+
+net use m: /delete /Y
+
+
+
+ 
+
+ 
+
+net use f: \\MALS36IMA\j$\sybase\ini /user:spawarmgr W1n$FlexW1n$Flex
+
+net use g: \\MALS36UDP\j$\sybase\ini /user:spawarmgr W1n$FlexW1n$Flex
+
+net use i: \\MWSS172\j$\sybase\ini /user:spawarmgr W1n$FlexW1n$Flex
+
+net use k: \\MACS4DETA\j$\sybase\ini /user:spawarmgr W1n$FlexW1n$Flex
+
+net use l: \\VMM262\j$\sybase\ini /user:spawarmgr W1n$FlexW1n$Flex
+
+net use m: \\VMM265\j$\sybase\ini /user:spawarmgr W1n$FlexW1n$Flex
+
+
+ 
+
+powershell -Command "(gc f:\sql.ini) -replace 'nalc.mcdsjp.mcds.usmc.mil,4050', 'nalc.mals36.mcdsus.mcds.usmc.mil,4050,8302' | Out-File -encoding ASCII f:\sql.ini"
+
+powershell -Command "(gc f:\sql.ini) -replace 'nalc.mals36.ntcss.nmci.usmc.mil,4050', '138.168.90.9,4050,8302' | Out-File -encoding ASCII f:\sql.ini"
+
+powershell -Command "(gc f:\sql.ini) -replace '138.168.90.9,4050', '138.168.90.9,4050,8302' | Out-File -encoding ASCII f:\sql.ini"
+
+powershell -Command "(gc g:\sql.ini) -replace 'nalc.mcdsjp.mcds.usmc.mil,4050', 'nalc.mals36.mcdsus.mcds.usmc.mil,4050,8302' | Out-File -encoding ASCII g:\sql.ini"
+
+powershell -Command "(gc g:\sql.ini) -replace 'nalc.mals36.ntcss.nmci.usmc.mil,4050', '138.168.90.9,4050,8302' | Out-File -encoding ASCII g:\sql.ini"
+
+powershell -Command "(gc g:\sql.ini) -replace '138.168.90.9,4050', '138.168.90.8,4050,8302' | Out-File -encoding ASCII g:\sql.ini"
+
+powershell -Command "(gc i:\sql.ini) -replace 'nalc.mcdsjp.mcds.usmc.mil,4050', 'nalc.mals36.mcdsus.mcds.usmc.mil,4050,8302' | Out-File -encoding ASCII i:\sql.ini"
+
+powershell -Command "(gc i:\sql.ini) -replace 'nalc.mals36.ntcss.nmci.usmc.mil,4050', '138.168.90.9,4050,8302' | Out-File -encoding ASCII i:\sql.ini"
+
+powershell -Command "(gc i:\sql.ini) -replace '138.168.90.9,4050', '138.168.90.8,4050,8302' | Out-File -encoding ASCII i:\sql.ini"
+
+powershell -Command "(gc k:\sql.ini) -replace 'nalc.mcdsjp.mcds.usmc.mil,4050', 'nalc.mals36.mcdsus.mcds.usmc.mil,4050,8302' | Out-File -encoding ASCII k:\sql.ini"
+
+powershell -Command "(gc k:\sql.ini) -replace 'nalc.mals36.ntcss.nmci.usmc.mil,4050', '138.168.90.9,4050,8302' | Out-File -encoding ASCII k:\sql.ini"
+
+powershell -Command "(gc k:\sql.ini) -replace '138.168.90.9,4050', '138.168.90.9,4050,8302' | Out-File -encoding ASCII k:\sql.ini"
+
+powershell -Command "(gc l:\sql.ini) -replace 'nalc.mcdsjp.mcds.usmc.mil,4050', 'nalc.mals36.mcdsus.mcds.usmc.mil,4050,8302' | Out-File -encoding ASCII l:\sql.ini"
+
+powershell -Command "(gc l:\sql.ini) -replace 'nalc.mals36.ntcss.nmci.usmc.mil,4050', '138.168.90.9,4050,8302' | Out-File -encoding ASCII l:\sql.ini"
+
+powershell -Command "(gc l:\sql.ini) -replace '138.168.90.9,4050', '138.168.90.9,4050,8302' | Out-File -encoding ASCII l:\sql.ini"
+
+powershell -Command "(gc m:\sql.ini) -replace 'nalc.mcdsjp.mcds.usmc.mil,4050', 'nalc.mals36.mcdsus.mcds.usmc.mil,4050,8302' | Out-File -encoding ASCII m:\sql.ini"
+
+powershell -Command "(gc m:\sql.ini) -replace 'nalc.mals36.ntcss.nmci.usmc.mil,4050', '138.168.90.9,4050,8302' | Out-File -encoding ASCII m:\sql.ini"
+
+powershell -Command "(gc m:\sql.ini) -replace '138.168.90.9,4050', '138.168.90.9,4050,8302' | Out-File -encoding ASCII m:\sql.ini"
+
+ 
+
+echo "Verify SQL.ini change from all the drive letters, then Press any key to disconnect all network drives"
+
+pause
+
+ 
+
+net use f: /delete /Y
+
+net use g: /delete /Y
+
+net use i: /delete /Y
+
+net use k: /delete /Y
+
+net use l: /delete /Y
+
+net use m: /delete /Y
+
+
+
+
+
+

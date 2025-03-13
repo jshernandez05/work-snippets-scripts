@@ -1,0 +1,7 @@
+DAP 4 FIX
+
+step 1 - /var/www/spawarInstall/includes/remove-expired-CAs.sh --force-regeneration
+
+step 2 - /usr/share/ntcss-jboss/jboss-setup.sh
+
+step 3 - /usr/share/ntcss-jboss/jboss-deploy-apps.sh

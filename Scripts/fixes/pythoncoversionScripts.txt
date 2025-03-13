@@ -1,0 +1,453 @@
+felix.sh*************************************************
+
+/opt/sybase/OCS-15_0/bin/isql -Ussabtusr -P`cat /opt/sybase/pd` -i /opt/sybase/DBISQL/maf_tr/felix.sql -o /opt/sybase/
+DBISQL/maf_tr/felix.raw.out
+
+********************************************************************
+
+felix.sql************************
+
+use p2db
+go
+select dr09.ddsn + "  " +
+  (right(convert(varchar,datepart(yy,dr09.last_fol_up_dttm)*1000+datepart(dy,dr09.last_fol_up_dttm)),4)) + " " +
+  (right(convert(varchar,datepart(yy,dr09.est_ship_dttm)*1000+datepart(dy,dr09.est_ship_dttm)),4))
+from
+  dr09_requisition dr09,
+  ds05_niin ds05,
+  ds02_invdata ds02,
+  da02_projectdata da02,
+  da01_organizatn da01,
+  da03_site da03
+where dr09.cur_niin *= ds05.niin
+  and dr09.org_cd = da02.org_cd
+  and dr09.proj_cd = da02.proj_cd
+  and dr09.org_cd = da01.org_cd
+  and dr09.cur_niin *= ds02.niin
+  and dr09.stk_fg != 'Y'
+  and dr09.lsc not in ('COMPL', 'CANCL', 'CXCMP',
+      'RCANC', 'IGNOR', 'CMSUF', 'CXSUF', 'RCSUF', 'XMSUF', 'CSPEB', 'CMPEB' )
+  and (da02.proj_cd_ind like '[ABJKNPXY]'
+   or substring(dr09.ddsn,5,1) = 'G'
+   or substring(dr09.ddsn,5,1) = 'W'
+   or substring(dr09.proj_cd,1,1) = '9')
+   and dr09.ddsn_suf like " "
+   and dr09.last_fol_up_dttm is not null
+   and dr09.est_ship_dttm is not null
+
+
+union
+
+
+
+select dr09.ddsn + "  " + "****" + " " +
+ (right(convert(varchar,datepart(yy,dr09.est_ship_dttm)*1000+datepart(dy,dr09.est_ship_dttm)),4))
+from
+  dr09_requisition dr09,
+  ds05_niin ds05,
+  ds02_invdata ds02,
+  da02_projectdata da02,
+  da01_organizatn da01,
+  da03_site da03
+where dr09.cur_niin *= ds05.niin
+  and dr09.org_cd = da02.org_cd
+  and dr09.proj_cd = da02.proj_cd
+  and dr09.org_cd = da01.org_cd
+  and dr09.cur_niin *= ds02.niin
+  and dr09.stk_fg != 'Y'
+  and dr09.lsc not in ('COMPL', 'CANCL', 'CXCMP',
+      'RCANC', 'IGNOR', 'CMSUF', 'CXSUF', 'RCSUF', 'XMSUF', 'CSPEB', 'CMPEB' )
+  and (da02.proj_cd_ind like '[ABJKNPXY]'
+   or substring(dr09.ddsn,5,1) = 'G'
+   or substring(dr09.ddsn,5,1) = 'W'
+   or substring(dr09.proj_cd,1,1) = '9')
+   and dr09.last_fol_up_dttm is null
+   and dr09.est_ship_dttm not like " "
+   and dr09.ddsn_suf like " "
+
+
+union
+
+
+
+select dr09.ddsn + "  " +
+  (right(convert(varchar,datepart(yy,dr09.last_fol_up_dttm)*1000+datepart(dy,dr09.last_fol_up_dttm)),4))
+  + " " +  + "****"
+from
+  dr09_requisition dr09,
+  ds05_niin ds05,
+  ds02_invdata ds02,
+  da02_projectdata da02,
+  da01_organizatn da01,
+  da03_site da03
+where dr09.cur_niin *= ds05.niin
+  and dr09.org_cd = da02.org_cd
+  and dr09.proj_cd = da02.proj_cd
+  and dr09.org_cd = da01.org_cd
+  and dr09.cur_niin *= ds02.niin
+  and dr09.stk_fg != 'Y'
+  and dr09.lsc not in ('COMPL', 'CANCL', 'CXCMP',
+      'RCANC', 'IGNOR', 'CMSUF', 'CXSUF', 'RCSUF', 'XMSUF', 'CSPEB', 'CMPEB' )
+  and (da02.proj_cd_ind like '[ABJKNPXY]'
+   or substring(dr09.ddsn,5,1) = 'G'
+   or substring(dr09.ddsn,5,1) = 'W'
+   or substring(dr09.proj_cd,1,1) = '9')
+   and dr09.ddsn_suf like " "
+   and dr09.last_fol_up_dttm not like " "
+   and dr09.est_ship_dttm is null
+
+
+union
+
+
+
+select dr09.ddsn + dr09.ddsn_suf + " " +
+(right(convert(varchar,datepart(yy,dr09.last_fol_up_dttm)*1000+datepart(dy,dr09.last_fol_up_dttm)),4)) + " " +
+(right(convert(varchar,datepart(yy,dr09.est_ship_dttm)*1000+datepart(dy,dr09.est_ship_dttm)),4))
+from
+  dr09_requisition dr09,
+  ds05_niin ds05,
+  ds02_invdata ds02,
+  da02_projectdata da02,
+  da01_organizatn da01,
+  da03_site da03
+where dr09.cur_niin *= ds05.niin
+  and dr09.org_cd = da02.org_cd
+  and dr09.proj_cd = da02.proj_cd
+  and dr09.org_cd = da01.org_cd
+  and dr09.cur_niin *= ds02.niin
+  and dr09.stk_fg != 'Y'
+  and dr09.lsc not in ('COMPL', 'CANCL', 'CXCMP',
+      'RCANC', 'IGNOR', 'CMSUF', 'CXSUF', 'RCSUF', 'XMSUF', 'CSPEB', 'CMPEB' )
+  and (da02.proj_cd_ind like '[ABJKNPXY]'
+   or substring(dr09.ddsn,5,1) = 'G'
+   or substring(dr09.ddsn,5,1) = 'W'
+   or substring(dr09.proj_cd,1,1) = '9')
+   and dr09.ddsn_suf not like " "
+   and dr09.last_fol_up_dttm is not null
+   and dr09.est_ship_dttm is not null
+
+
+union
+
+
+
+
+select  dr09.ddsn + dr09.ddsn_suf + " " + "****" + " " +
+(right(convert(varchar,datepart(yy,dr09.est_ship_dttm)*1000+datepart(dy,dr09.est_ship_dttm)),4))
+from
+  dr09_requisition dr09,
+  ds05_niin ds05,
+  ds02_invdata ds02,
+  da02_projectdata da02,
+  da01_organizatn da01,
+  da03_site da03
+where dr09.cur_niin *= ds05.niin
+  and dr09.org_cd = da02.org_cd
+  and dr09.proj_cd = da02.proj_cd
+  and dr09.org_cd = da01.org_cd
+  and dr09.cur_niin *= ds02.niin
+  and dr09.stk_fg != 'Y'
+  and dr09.lsc not in ('COMPL', 'CANCL', 'CXCMP',
+      'RCANC', 'IGNOR', 'CMSUF', 'CXSUF', 'RCSUF', 'XMSUF', 'CSPEB', 'CMPEB' )
+  and (da02.proj_cd_ind like '[ABJKNPXY]'
+   or substring(dr09.ddsn,5,1) = 'G'
+   or substring(dr09.ddsn,5,1) = 'W'
+   or substring(dr09.proj_cd,1,1) = '9')
+   and dr09.ddsn_suf not like " "
+   and dr09.last_fol_up_dttm is null
+   and dr09.est_ship_dttm is not null
+
+
+union
+
+
+
+select dr09.ddsn + dr09.ddsn_suf + " " +
+(right(convert(varchar,datepart(yy,dr09.last_fol_up_dttm)*1000+datepart(dy,dr09.last_fol_up_dttm)),4)) + " " +
+ + "****"
+from
+  dr09_requisition dr09,
+  ds05_niin ds05,
+  ds02_invdata ds02,
+  da02_projectdata da02,
+  da01_organizatn da01,
+  da03_site da03
+where dr09.cur_niin *= ds05.niin
+  and dr09.org_cd = da02.org_cd
+  and dr09.proj_cd = da02.proj_cd
+  and dr09.org_cd = da01.org_cd
+  and dr09.cur_niin *= ds02.niin
+  and dr09.stk_fg != 'Y'
+  and dr09.lsc not in ('COMPL', 'CANCL', 'CXCMP',
+      'RCANC', 'IGNOR', 'CMSUF', 'CXSUF', 'RCSUF', 'XMSUF', 'CSPEB', 'CMPEB' )
+  and (da02.proj_cd_ind like '[ABJKNPXY]'
+   or substring(dr09.ddsn,5,1) = 'G'
+   or substring(dr09.ddsn,5,1) = 'W'
+   or substring(dr09.proj_cd,1,1) = '9')
+   and dr09.ddsn_suf not like " "
+   and dr09.last_fol_up_dttm is not null
+   and dr09.est_ship_dttm is null
+
+
+
+
+update da02_projectdata set
+proj_cd_ind = " "
+where proj_cd like 'AP5'
+and proj_cd_ind not like " "
+go
+update da02_projectdata set
+proj_cd_ind = " "
+where proj_cd like 'AK9'
+and proj_cd_ind not like " "
+go
+update da02_projectdata set
+proj_cd_ind = "N"
+where proj_cd like 'AK0'
+and proj_cd_ind not like 'N'
+go
+update da02_projectdata set
+proj_cd_ind = "P"
+where proj_cd like 'AK7'
+and proj_cd_ind not like 'P'
+go
+update da02_projectdata set
+proj_cd_ind = "N"
+where proj_cd like '706'
+and proj_cd_ind not like 'N'
+go
+update da02_projectdata set
+proj_cd_ind = "P"
+where proj_cd like '707'
+and proj_cd_ind not like 'P'
+go
+update da02_projectdata set
+proj_cd_ind = " "
+where proj_cd like 'BK0'
+and proj_cd_ind like 'N'
+go
+update da02_projectdata set
+proj_cd_ind = "A"
+where proj_cd like 'ZA9'
+and proj_cd_ind not like 'A'
+go
+update da02_projectdata set
+proj_cd_ind = " "
+where proj_cd like 'AK1'
+and proj_cd_ind not like " "
+go
+update da02_projectdata set
+proj_cd_ind = " "
+where proj_cd like 'BK1'
+and proj_cd_ind not like " "
+go
+update da02_projectdata set
+proj_cd_ind = "N"
+where proj_cd like '730'
+and proj_cd_ind not like " "
+go
+update da02_projectdata set
+proj_cd_ind = " "
+where proj_cd like '774'
+and proj_cd_ind not like " "
+go
+update db01_btchprocess set
+prt_output_ind = 0
+where btch_prc_id like 'J72400'
+go
+
+
+np_fix********************************************** 
+#!/bin/bash
+while true; do
+/opt/sybase/DBISQL/NMCS_PMCS_FIX_ck1
+sleep 5;
+done
+
+
+with
+
+[root@nalc ~]# more /etc/rc.d/rc3.d/S99local
+#!/bin/sh
+#
+# This script will be executed *after* all the other init scripts.
+# You can put your own initialization stuff in here if you don't
+# want to do the full Sys V style init stuff.
+
+touch /var/lock/subsys/local
+
+# required for compliance with RHEL-06-000135
+chmod 0600 /var/log/boot.log
+
+/opt/sybase/DBISQL/np_fix &
+
+*****************************************************
+NMCS_PMCS_FIX_ck1
+
+#!/bin/bash
+chmod 777 /opt/sybase/DBISQL/maf_tr/felix.sql
+chown sybase:sybase /opt/sybase/DBISQL/maf_tr/felix.sql
+/h/NTCSSS/bin/getlinkdata ssabtusr > /opt/sybase/Pcrr ;  grep Second /opt/sybase/Pcrr | awk '{print$4}' > /opt/sybase/
+pd
+chmod 777 /opt/sybase/pd
+chown sybase:sybase /opt/sybase/pd
+echo '/opt/sybase/OCS-15_0/bin/isql -Ussabtusr -P`cat /opt/sybase/pd` -i /opt/sybase/DBISQL/maf_tr/felix.sql -o /opt/s
+ybase/DBISQL/maf_tr/felix.raw.out' > /opt/sybase/DBISQL/maf_tr/felix.sh
+chmod 777 /opt/sybase/DBISQL/maf_tr/felix.sh
+chown sybase:sybase /opt/sybase/DBISQL/maf_tr/felix.sh
+su - sybase -c /opt/sybase/DBISQL/maf_tr/felix.sh
+cat /opt/sybase/DBISQL/maf_tr/felix.raw.out | grep -v row | grep -v "-" | awk "NF"  > /h/OIMABT/data/reports/felix
+ls -alt /h/OIMABT/data/reports/J724* | grep -v "aud" | head -n 1 | awk '{print$9}' > /h/OIMABT/data/reports/file_id
+echo cat "`cat /h/OIMABT/data/reports/file_id`" > /h/OIMABT/data/reports/step0; chmod 777 /h/OIMABT/data/reports/step0
+/h/OIMABT/data/reports/step0   | cut -c 5-13,122-200 | awk "NF" | grep -v PAGE | grep -v FDT | grep -v "-" | grep -v S
+ELECTIO | grep -v SORT | grep -v DATE | grep -v TIME | grep -vw PR | grep -v SUCCESSFU | grep -v REPORT | grep -v EXEC
+UTION > /h/OIMABT/data/reports/step1
+cat /h/OIMABT/data/reports/step1 | grep -v  "TITLE" | grep -v "SYSTEM" | grep -v "OF COP" | grep -v "HEADIN" | grep -v
+ "ZONTAL" | grep -v  "NUMBERS" | grep -v "HEADING" | grep -v "ICAL SPAC" | grep -v "PER PAG" > /h/OIMABT/data/reports/
+step2
+cat /h/OIMABT/data/reports/step2 | grep -v  "BREAK" | grep -v  "BREAK" | grep -v "CTION" | grep -v  "PROJE" | grep -v
+"CRITERIA" | grep -v "END"  > /h/OIMABT/data/reports/step3
+cat /h/OIMABT/data/reports/step3 | grep -v "          " | grep -v " AN   AN" > /h/OIMABT/data/reports/step4
+cat /h/OIMABT/data/reports/step4 | awk '{print$1}' | grep -v '^........$' > /h/OIMABT/data/reports/step4_suf_db
+grep -vf /h/OIMABT/data/reports/step4_suf_db /h/OIMABT/data/reports/step4 > /h/OIMABT/data/reports/step4_non_suf
+grep -f /h/OIMABT/data/reports/step4_suf_db /h/OIMABT/data/reports/step4 > /h/OIMABT/data/reports/step4_suf
+cat /h/OIMABT/data/reports/step4_suf | sed 's,^,# ,g' | sed 's,      , **** ,g' | sed s',     , *** ,g' | awk '{print$
+2,$3,$4,$1}' > /h/OIMABT/data/reports/step5_suf
+cat /h/OIMABT/data/reports/step4_non_suf | sed 's,^,# ,g' | sed 's,      , **** ,g' | sed s',     , *** ,g' | awk '{pr
+int$2,$3,$4,$1}' > /h/OIMABT/data/reports/step5_non_suf
+cat /h/OIMABT/data/reports/felix | awk '{print$1}' | grep -v '^........$' > /h/OIMABT/data/reports/felix_suf_db
+grep -vf /h/OIMABT/data/reports/felix_suf_db /h/OIMABT/data/reports/felix > /h/OIMABT/data/reports/felix_non_suf
+grep -f /h/OIMABT/data/reports/felix_suf_db /h/OIMABT/data/reports/felix > /h/OIMABT/data/reports/felix_suf
+cat /h/OIMABT/data/reports/felix_suf | sed 's,^,Z ,g' | awk '{print$2,$1$3,$4}' > /h/OIMABT/data/reports/felix_bob_joe
+1Z_suf
+cat /h/OIMABT/data/reports/felix_non_suf | sed 's,^,Z ,g' | awk '{print$2,$1$3,$4}' > /h/OIMABT/data/reports/felix_bob
+_joe1Z_non_suf
+cat /h/OIMABT/data/reports/felix_bob_joe1Z_suf >> /h/OIMABT/data/reports/step5_suf
+cat /h/OIMABT/data/reports/felix_bob_joe1Z_non_suf >> /h/OIMABT/data/reports/step5_non_suf
+cat /h/OIMABT/data/reports/step5_suf | grep "#" | awk '{print$1}'> /h/OIMABT/data/reports/step5_suf_db_bad
+grep -f /h/OIMABT/data/reports/step5_suf_db_bad /h/OIMABT/data/reports/step5_suf > /h/OIMABT/data/reports/step5_suf_fi
+lter
+[root@nalc DBISQL]# more NMCS_PMCS_FIX_ck1
+#!/bin/csh -f
+ls -alt /h/OIMABT/data/reports/J724* | grep -v "aud" | head -n 1 | awk '{print$9}' > /h/OIMABT/data/reports/file_id
+cat "`cat /h/OIMABT/data/reports/file_id`" | grep Fixed > /h/OIMABT/data/reports/fix_ck
+wc -c /h/OIMABT/data/reports/fix_ck > /h/OIMABT/data/reports/fix_ck_s
+set NPchecker=`cut -c 1 /h/OIMABT/data/reports/fix_ck_s`
+if ($NPchecker > 1) then
+rm -f /h/OIMABT/data/reports/fix_ck
+rm -f /h/OIMABT/data/reports/fix_ck_s
+else
+/opt/sybase/DBISQL/NMCS_PMCS_FIX_ck2
+endif
+
+
+***************************************************************
+NMCS_PMCS_FIX_ck2
+
+[root@nalc DBISQL]# more NMCS_PMCS_FIX_ck2
+#!/bin/csh -f
+ls -alt /h/OIMABT/data/reports/J724* | grep -v "aud" | head -n 1 | awk '{print$9}' > /h/OIMABT/data/reports/file_id
+cat "`cat /h/OIMABT/data/reports/file_id`" | grep "SUCCESSFUL COMPLETION" > /h/OIMABT/data/reports/fix_ck
+wc -c /h/OIMABT/data/reports/fix_ck > /h/OIMABT/data/reports/fix_ck_s
+set NPchecker=`cut -c 1 /h/OIMABT/data/reports/fix_ck_s`
+if ($NPchecker < 1) then
+rm -f /h/OIMABT/data/reports/fix_ck
+rm -f /h/OIMABT/data/reports/fix_ck_s
+else
+/opt/sybase/DBISQL/NMCS_PMCS_FIX
+endif
+
+***************************************************
+NMCS_PMCS_FIX
+
+[root@nalc DBISQL]# more NMCS_PMCS_FIX
+#!/bin/bash
+chmod 777 /opt/sybase/DBISQL/maf_tr/felix.sql
+chown sybase:sybase /opt/sybase/DBISQL/maf_tr/felix.sql
+/h/NTCSSS/bin/getlinkdata ssabtusr > /opt/sybase/Pcrr ;  grep Second /opt/sybase/Pcrr | awk '{print$4}' > /opt/sybase/
+pd
+chmod 777 /opt/sybase/pd
+chown sybase:sybase /opt/sybase/pd
+echo '/opt/sybase/OCS-15_0/bin/isql -Ussabtusr -P`cat /opt/sybase/pd` -i /opt/sybase/DBISQL/maf_tr/felix.sql -o /opt/s
+ybase/DBISQL/maf_tr/felix.raw.out' > /opt/sybase/DBISQL/maf_tr/felix.sh
+chmod 777 /opt/sybase/DBISQL/maf_tr/felix.sh
+chown sybase:sybase /opt/sybase/DBISQL/maf_tr/felix.sh
+su - sybase -c /opt/sybase/DBISQL/maf_tr/felix.sh
+cat /opt/sybase/DBISQL/maf_tr/felix.raw.out | grep -v row | grep -v "-" | awk "NF"  > /h/OIMABT/data/reports/felix
+ls -alt /h/OIMABT/data/reports/J724* | grep -v "aud" | head -n 1 | awk '{print$9}' > /h/OIMABT/data/reports/file_id
+echo cat "`cat /h/OIMABT/data/reports/file_id`" > /h/OIMABT/data/reports/step0; chmod 777 /h/OIMABT/data/reports/step0
+/h/OIMABT/data/reports/step0   | cut -c 5-13,122-200 | awk "NF" | grep -v PAGE | grep -v FDT | grep -v "-" | grep -v S
+ELECTIO | grep -v SORT | grep -v DATE | grep -v TIME | grep -vw PR | grep -v SUCCESSFU | grep -v REPORT | grep -v EXEC
+UTION > /h/OIMABT/data/reports/step1
+cat /h/OIMABT/data/reports/step1 | grep -v  "TITLE" | grep -v "SYSTEM" | grep -v "OF COP" | grep -v "HEADIN" | grep -v
+ "ZONTAL" | grep -v  "NUMBERS" | grep -v "HEADING" | grep -v "ICAL SPAC" | grep -v "PER PAG" > /h/OIMABT/data/reports/
+step2
+cat /h/OIMABT/data/reports/step2 | grep -v  "BREAK" | grep -v  "BREAK" | grep -v "CTION" | grep -v  "PROJE" | grep -v
+"CRITERIA" | grep -v "END"  > /h/OIMABT/data/reports/step3
+cat /h/OIMABT/data/reports/step3 | grep -v "          " | grep -v " AN   AN" > /h/OIMABT/data/reports/step4
+cat /h/OIMABT/data/reports/step4 | awk '{print$1}' | grep -v '^........$' > /h/OIMABT/data/reports/step4_suf_db
+grep -vf /h/OIMABT/data/reports/step4_suf_db /h/OIMABT/data/reports/step4 > /h/OIMABT/data/reports/step4_non_suf
+grep -f /h/OIMABT/data/reports/step4_suf_db /h/OIMABT/data/reports/step4 > /h/OIMABT/data/reports/step4_suf
+cat /h/OIMABT/data/reports/step4_suf | sed 's,^,# ,g' | sed 's,      , **** ,g' | sed s',     , *** ,g' | awk '{print$
+2,$3,$4,$1}' > /h/OIMABT/data/reports/step5_suf
+cat /h/OIMABT/data/reports/step4_non_suf | sed 's,^,# ,g' | sed 's,      , **** ,g' | sed s',     , *** ,g' | awk '{pr
+int$2,$3,$4,$1}' > /h/OIMABT/data/reports/step5_non_suf
+cat /h/OIMABT/data/reports/felix | awk '{print$1}' | grep -v '^........$' > /h/OIMABT/data/reports/felix_suf_db
+grep -vf /h/OIMABT/data/reports/felix_suf_db /h/OIMABT/data/reports/felix > /h/OIMABT/data/reports/felix_non_suf
+grep -f /h/OIMABT/data/reports/felix_suf_db /h/OIMABT/data/reports/felix > /h/OIMABT/data/reports/felix_suf
+cat /h/OIMABT/data/reports/felix_suf | sed 's,^,Z ,g' | awk '{print$2,$1$3,$4}' > /h/OIMABT/data/reports/felix_bob_joe
+1Z_suf
+cat /h/OIMABT/data/reports/felix_non_suf | sed 's,^,Z ,g' | awk '{print$2,$1$3,$4}' > /h/OIMABT/data/reports/felix_bob
+_joe1Z_non_suf
+cat /h/OIMABT/data/reports/felix_bob_joe1Z_suf >> /h/OIMABT/data/reports/step5_suf
+cat /h/OIMABT/data/reports/felix_bob_joe1Z_non_suf >> /h/OIMABT/data/reports/step5_non_suf
+cat /h/OIMABT/data/reports/step5_suf | grep "#" | awk '{print$1}'> /h/OIMABT/data/reports/step5_suf_db_bad
+grep -f /h/OIMABT/data/reports/step5_suf_db_bad /h/OIMABT/data/reports/step5_suf > /h/OIMABT/data/reports/step5_suf_fi
+lter
+cat /h/OIMABT/data/reports/step5_non_suf | grep "#" | awk '{print$1}'> /h/OIMABT/data/reports/step5_non_suf_db_bad
+grep -f /h/OIMABT/data/reports/step5_non_suf_db_bad /h/OIMABT/data/reports/step5_non_suf > /h/OIMABT/data/reports/step5_non_suf_filter
+cat /h/OIMABT/data/reports/step5_suf_filter | sort | grep -v "Z0001 0001" |  awk 'NR%2{printf"%s ",$0;next;}1' | awk '{print$2,$3,$4,$6,$7}' | sed 's,Z,,g' | sed 's,^,sed -i "s/,g' | sed 's,^,/ ,g' > /h/OIMA
+BT/data/reports/step6_suf
+cat /h/OIMABT/data/reports/step5_non_suf_filter | sort | grep -v "Z0001 0001" |  awk 'NR%2{printf"%s ",$0;next;}1' | awk '{print$2,$3,$4,$6,$7}' | sed 's,Z,,g' | sed 's,^,sed -i "s/,g' | sed 's,^,/ ,g' > /h/
+OIMABT/data/reports/step6_non_suf
+cat /h/OIMABT/data/reports/step6_suf > /h/OIMABT/data/reports/step6
+cat /h/OIMABT/data/reports/step6_non_suf >> /h/OIMABT/data/reports/step6
+cat /h/OIMABT/data/reports/step6 | awk '{print$2,$3,$4,$5$1,$7,$8$1}' | sed "s,^,g# `cat /h/OIMABT/data/reports/file_id`  ,g" | sed 's,#,",g' | awk '{print$3,$4,$5,$6,$7,$8$1,$2}' | sed 's,/ , /,g' | sed 's,
+" /,"#/,g' | sed 's, /,/,g' | sed 's,#, ,g' > /h/OIMABT/data/reports/step7
+cat /h/OIMABT/data/reports/step7 | sed 's,*, ,g' > /h/OIMABT/data/reports/step8
+chmod 777 /h/OIMABT/data/reports/step8
+/h/OIMABT/data/reports/step8
+echo "" >> "`cat /h/OIMABT/data/reports/file_id`"
+echo "As of 6-26-2019, FDT & ESD Fixed by Felix, Bob and Joe" >> "`cat /h/OIMABT/data/reports/file_id`"
+rm -f /h/OIMABT/data/reports/step8
+rm -f /h/OIMABT/data/reports/step7
+rm -f /h/OIMABT/data/reports/step6
+rm -f /h/OIMABT/data/reports/step6_non_suf
+rm -f /h/OIMABT/data/reports/step6_suf
+rm -f /h/OIMABT/data/reports/step5_non_suf_filter
+rm -f /h/OIMABT/data/reports/step5_non_suf_db_bad
+rm -f /h/OIMABT/data/reports/step5_suf_filter
+rm -f /h/OIMABT/data/reports/step5_suf_db_bad
+rm -f /h/OIMABT/data/reports/step5_non_suf
+rm -f /h/OIMABT/data/reports/step5_suf
+rm -f /h/OIMABT/data/reports/felix_bob_joe1Z_non_suf
+rm -f /h/OIMABT/data/reports/felix_bob_joe1Z_suf
+rm -f /h/OIMABT/data/reports/felix_suf
+rm -f /h/OIMABT/data/reports/felix_non_suf
+rm -f /h/OIMABT/data/reports/felix_suf_db
+rm -f /h/OIMABT/data/reports/step4_suf
+rm -f /h/OIMABT/data/reports/step4_non_suf
+rm -f /h/OIMABT/data/reports/step4_suf_db
+rm -f /h/OIMABT/data/reports/step4
+rm -f /h/OIMABT/data/reports/step3
+rm -f /h/OIMABT/data/reports/step2
+rm -f /h/OIMABT/data/reports/step1
+rm -f /h/OIMABT/data/reports/step0
+rm -f /h/OIMABT/data/reports/felix
+
+
+************************************************************
+
+
+

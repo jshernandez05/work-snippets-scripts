@@ -1,0 +1,23 @@
+In [12]: list1 = ('a','b','c')
+
+In [13]: list2 = ('1','2','3')
+
+In [14]: list3 = ('4','5','6')
+
+In [15]: zip(list2, list3)
+Out[15]: [('1', '4'), ('2', '5'), ('3', '6')]
+
+In [16]: dict(zip(list1, zip(list2, list3)))
+Out[16]: {'a': ('1', '4'), 'b': ('2', '5'), 'c': ('3', '6')}
+
+In [17]: dict(zip(list1, zip(map(int, list2), map(int, list3))))
+Out[17]: {'a': (1, 4), 'b': (2, 5), 'c': (3, 6)}
+
+In [18]: dict(zip(list1, map(list, zip(map(int, list2), map(int, list3)))))
+Out[18]: {'a': [1, 4], 'b': [2, 5], 'c': [3, 6]}
+For an arbitrary number of lists, you could do this:
+
+dict(zip(list1, zip(*(map(int, lst) for lst in (list2, list3, list4, ...)))))
+Or, to make the values lists rather than tuples,
+
+dict(zip(list1, map(list, zip(*(map(int, lst) for lst in (list2, list3, list4, ...)

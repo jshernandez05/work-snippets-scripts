@@ -1,0 +1,74 @@
+###########################################################################################
+# Notes for the JSI239 file which will be used as the input for the JSS270 batch process  #
+########################################################################################### 
+
+1. The unit building the incoming package in their system needs to be aware of the input file
+   received (JSI239) from the transferring unit.
+
+2. Below are examples for the two packages being transferred back from MALS-13 to MALS-14
+   (These are the actual files from MALS-13s server for the upcoming transfer)
+
+[root@rsupmast tape_out]# head JSI2399339056
+  1933909503778HDR570821231RP  1MALS-14 RESP                09114                                                                                                                                                                                                                                                                   CDIMG
+
+
+[root@rsupmast tape_out]# head JSI2399339055
+  1933909405460HDR57082F1V816  FMALS-14 FSA                 09114                                                                                                                                                                                                                                                                   CDIMG
+
+
+3.  In the examples above, MALS-14 would have to build the Support Packages in their system
+    with a parent UIC of R57082 and a Suprt Pkg Serno of 1231RP
+           and           R57082                          F1V816
+
+    for JSS270 to correctly idendtify the Suprt Pkg 
+    if not, JSS270 would error out stating the following:
+
+    ****   Spkg Parent/Serial R57082/F1V816 does not exist.  ****
+    ****     Establish via Support Package Serial.           ****       
+
+    This is because RSupply creates the HDR for JSI239 with the UIC and Suprt Pkg Serno as
+    they are built in the transferring units database.
+
+    The receiving unit will most likely be building the Support Pkgs with their UIC.
+        ex.  09114 1231RP  and  09114 F1V816
+
+4.  For these two packages MALS-14 will have to modify the input files before transferring 
+    them to the server to read as such:
+
+  1933909503778HDR091141231RP  1MALS-14 RESP                57082                                                                                                                                                                                                                                                                   CDIMG
+
+  1933909405460HDR09114F1V816  FMALS-14 FSA                 57082 
+
+    essentially, the UICs are being flip/flopped.                                                                                                                                                                                                                                                                  CDIMG
+
+
+###########################################################################################
+#  Running the SpkgX71.pyc                                                                #
+###########################################################################################
+
+1.  Ensure the unit has run the JSS270 job (the job should be sitting in the rsupply queue
+    with an Abort status
+
+2.  Place the SpkgX71.pyc file into the /opt/sybase/DBISQL directory on the rsupmast server
+    (placing the file in the /opt/sybase/DBISQL directory will ensure the script self deletes
+     itself upon completion)
+
+3.  to execute the script from within the DBISQL directory type the following command:
+
+    cd /opt/sybase/DBISQL   [ENTER]
+
+    python SpkgX71.pyc      [ENTER]
+
+    (*note 1 - if you are not in the /opt/sybase/DBISQL you will have to use the absolute path
+               python /opt/sybase/DBISQL/SpkgX71.pyc
+
+     *note 2 - because the script is a compiled .pyc file you must type the word python and the
+               file name for it to run.  using ./SpkgX71 or /opt/sybase/DBISQL/SpkgX71.pyc will
+               not work. )
+
+4.  once complete, you can verify the X71s by navigating in RSupply to
+
+    Inventory > management > inventory actions > support package incoming
+
+5.  Finally have the DBA delete the JSS270 batch job which aborted from the queue in RSupply
+

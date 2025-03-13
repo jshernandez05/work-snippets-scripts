@@ -1,0 +1,70 @@
+Supply Printers
+
+Name Convention:
+DD 1348-1 Location Printers
+	*Location Outputs are built to direct 1348-1(s) for niins w/ locations to print at a specified printer when 	no destination override is set in "Hard Copy Notice Parameters" (System > Administration > System Tables > 		Site Validation Table > Hard Copy Notice Parameters)
+
+NAME 
+ex. LOCRM*01   
+	LOC = Default for LOC printer 
+	RM* = for niin with location starting with RM(key identification value)
+	01 = Default value
+
+ex. LOCRN*01
+
+	LOC = Default for LOC printer 
+	RN* = for niin with location starting with RM(key identification value)
+	01 = Default value
+
+In your Application Printer Config
+Output Name LOCRM*01 is set to Default Printer CMD_WC (IP: 138.168.125.15)
+Output Name LOCRN*01 is set to Default Printer SMD (IP: 138.168.125.30)
+
+***Your current "Hard Copy Notice Parameters" are using destination overide for 1348-1(s) w/ location
+	- They are set to print to the below printers based on condition 
+	or RMDRMD01 (1348-1 printer default print to Control_Branch (IP: 138.168.125.32) 
+	or RMDRCB01 (1348-1 printer default print to CMD_WC (IP: 138.168.125.15)
+	or CMDCMD01 (1348-1 printer default print to CMD_WC (IP: 138.168.125.15)
+
+--------------------------------------------------------------------------------------------
+Supply 1348-1 Printers:
+	*Used to control "Hard Copy Notice Parameters" destinations
+
+NAME
+ex. RMDRMD01
+
+	RMD = Division
+	RMD = Location of Printer (Identifiying location such as branch it is located in)
+	01  = Default value
+
+ex. RMDRCB01
+
+	RMD = Division
+	RCB = Located in RCB
+	01  = Default value
+
+ex. CMDCMD01
+
+	CMD = Division
+	CMD = Main CMD (normally represents the warehouse printer)
+	01  = Default value
+-------------------------------------------------------------------------------------------------
+Supply W/C Printers:
+	*Printers set up mainly for the use of printing based on a user's profile (what workcenter he/she is 		assigned to in NALCOMIS (System > Security > Personnel > Search [Enter Last Name])
+
+	*Based on "Hard Copy Notice Parameters" settings, certain notices can be configured to a users profile so 		it prints at their default printer.
+
+	*When destination ovrd notices are left blank, like the VIDSMAF Print, they will allow for a MAF printed 	from (Maintenance > MAF > Print) to be printed at the users default printer.
+
+NAME
+ex  GGZCMD01	(Profile items for personnel assigned to CMD will print at the specified default printer)
+	GGZ = Supply Org Code
+	CMD = Asgn WC (ex. 050, 05C, AIS , ALM, ASP , AWP , CMD , EXP , GGM, JSF , MAT , MCC , MDU)
+	01  = Default value
+
+    
+ex  GGZRMD01
+	GGZ = Supply Org Code
+	CMD = personnel assigned to RMD
+	01  = Default value
+ 

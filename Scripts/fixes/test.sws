@@ -1,0 +1,17 @@
+#aseisql workspace
+#you should not change the place of the sections
+
+[connect]
+Server           =NTCSS_RSUP
+Database         =supply
+Charset          =iso_1
+Login            =ssabtusr
+#Password         =
+EncryptedPassword=f049ffffc600ea0028009b008c002c0089008b0089006c00d7008a008b00e900c9004800fa003c004b00e800ab007b0087001a003800da00fa00e8000a00790000c60000c1000000
+Encrypt.Password =true
+
+[open]
+dir =C:\Users\joseph.hernandez\Desktop\Scripts
+
+[query]
+SELECT * FROM zq_owner

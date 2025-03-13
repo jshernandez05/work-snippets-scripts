@@ -1,0 +1,53 @@
+if exists(select 1 from syscolumns where id=object_id('dbo.cert_auth')) print 'yes'
+
+
+
+
+select * from du05_personnel where last_nm like 'BURGESS'
+
+
+
+
+
+
+
+/* NALC- User login_id clean-up/check */
+
+--Users in master syslogins not in p2db database du05_personnel--
+select 	dbname, name, "" as login_id, fullname
+from   	master.dbo.syslogins
+where 	name not in (select login_id from du05_personnel)
+	and name not in ('sa', 'probe', 'sybbtusr', 'ssabtusr', 'jboss')
+
+union
+
+--Users in p2db du05_personnel not in master sys_logins--
+select "p2db", "", login_id, init +  " " + last_nm
+from 	du05_personnel
+where	login_id not in (select name from master.dbo.syslogins)
+
+
+
+
+
+INC000006010766
+
+
+select rsup_trans_dt, nalc_yr, nalc_day, nalc_time, doc_id, ri_to, sup_rtc, fsc, niin, smic, ui, fc_svc_dsg_cd, org_cd, doc_dt, dsn, supadd, sgnl_cd, fc, dist_cd, cog, proj_cd, pri, milstrip_rdd, adv_cd, ovrd_cd, media_sts_cd, upr, nup, srce_ind, intfc_act_cd, nomen, rvrsl_ind, cmpltn_dt, cage, refno, suf_cd, trans_dt, prcmt_instln_acty_id, prcmt_doc_fy, prcmt_instrctn_ty, serno_piin, supmtl_piin, est_shpg_dt, ri_scnd, rcpt_dt, faadc_nrfc_cd, uic_from, mcc, act_cnt_qty, ovg_to_stk_ind, matl_loctn_1, qty_loctn_1, matl_loctn_2, qty_loctn_2, matl_loctn_3, qty_loctn_3, fail_ind, fail_dscrptn
+	from dbo.nalc_sts_rcpt
+	
+	
+select  niin from stock_item where char_length(niin) <> 9
+
+
+
+select "'" + niin + "'," from stock_item
+
+
+cat JSS2452007029A | awk '{print "\x27" substr($1, 7, 9) "\x27"}'
+
+
+
+  
+
+

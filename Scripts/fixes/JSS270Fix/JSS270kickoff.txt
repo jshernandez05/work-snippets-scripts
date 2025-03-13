@@ -1,0 +1,59 @@
+if ($jss_ck > 0) then
+goto start_jack_jill
+else
+goto theend
+endif
+start_jack_jill:
+echo cat "`cat /h/data/local/SUP1BT/reports/file_id` | grep 'Rqst Nbr'  " > find_batch_nbr ; chmod 777 find_batch_nbr ; ./find_batch_nbr | cut -c 27-39 > rqst_no
+cp -f /opt/sybase/DBISQL/JACK /opt/sybase/DBISQL/JILL
+cp -f rqst_no  /opt/sybase/DBISQL/JACK
+cksum /opt/sybase/DBISQL/JILL | cut -c 1-10 > /opt/sybase/DBISQL/jill_ck
+cksum /opt/sybase/DBISQL/JACK | cut -c 1-10 > /opt/sybase/DBISQL/jack_ck
+set jill=`cat /opt/sybase/DBISQL/jill_ck`
+set jack=`cat /opt/sybase/DBISQL/jack_ck`
+if ($jack == $jill) then
+goto theend
+else
+/opt/sybase/DBISQL/JSS270_kickoff
+endif
+theend:
+[root@rsupmast big_kitty1]# cd ..
+[root@rsupmast DBISQL]# more JSS270_kickoff
+date '+%b %d %Y %-I:%M%p' > rcpt_gen_dt
+date '+%b %d %Y %-I:%M%p' > rcpt_prcs_dt
+echo "A" > cosal_ty_cd
+echo "C" > source_ind
+echo "I" > updt_cd
+paste rcpt_gen_dt rqst_no rcpt_prcs_dt cosal_ty_cd source_ind updt_cd > static_fields
+cat /h/data/local/SUP1BT/tape_in/JSS270 | grep X71 | cut -c 16-18 > doc_id
+cat doc_id | sed "s,X71,X71 `cat static_fields`,g" > head
+cat -vet head | sed s'/X71/X71", "/g' | sed 's/\^I/", "/g' | sed s'/\$/",/g' | sed s'/X71", " /X71", "/g' > heads
+cat /h/data/local/SUP1BT/tape_in/JSS270 | grep HDR | cut -c 19-23 > uic_from
+cat /h/data/local/SUP1BT/tape_in/JSS270 | grep HDR | cut -c 24-29 > suprt_pkg_serno
+paste uic_from suprt_pkg_serno > pre_finalheader
+cat -vet pre_finalheader | sed 's/\^I/", "/g' | sed 's,\$,,g' > finalheader
+cat /h/data/local/SUP1BT/tape_in/JSS270 | grep X71 | cut -c 23-26 > fsc
+cat /h/data/local/SUP1BT/tape_in/JSS270 | grep X71 | cut -c 27-35 > niin
+cat /h/data/local/SUP1BT/tape_in/JSS270 | grep X71 | cut -c 36-37 | sed "s,  ,XX,g" > smic
+cat /h/data/local/SUP1BT/tape_in/JSS270 | grep X71 | cut -c 38-39 > ui
+cat /h/data/local/SUP1BT/tape_in/JSS270 | grep X71 | cut -c 40-44 > rcpt_doc_qty_rcvd
+cat /h/data/local/SUP1BT/tape_in/JSS270 | grep X71 | cut -c 45 > fc_svc_dsg
+cat /h/data/local/SUP1BT/tape_in/JSS270 | grep X71 | cut -c 46-50 > org_cd
+cat /h/data/local/SUP1BT/tape_in/JSS270 | grep X71 | cut -c 51-54 > doc_dt
+cat /h/data/local/SUP1BT/tape_in/JSS270 | grep X71 | cut -c 55-58 > dsn
+cat /h/data/local/SUP1BT/tape_in/JSS270 | grep X71 | cut -c 59 | sed "s, ,*,g" > doc_suf_cd
+cat /h/data/local/SUP1BT/tape_in/JSS270 | grep X71 | cut -c 67-68 > fc
+cat /h/data/local/SUP1BT/tape_in/JSS270 | grep X71 | cut -c 70-71 > cog
+cat /h/data/local/SUP1BT/tape_in/JSS270 | grep X71 | cut -c 78-82 > ownr_cd
+cat /h/data/local/SUP1BT/tape_in/JSS270 | grep X71 | cut -c 85 > rcpt_excpt_ty
+cat /h/data/local/SUP1BT/tape_in/JSS270 | grep X71 | cut -c 87 | sed "s, ,#,g" > mcc
+cat /h/data/local/SUP1BT/tape_in/JSS270 | grep X71 | cut -c 89-93 > actl_cnt_stow_qty
+cat /h/data/local/SUP1BT/tape_in/JSS270 | grep X71 | cut -c 131-136 > matl_loctn
+paste fsc niin smic ui rcpt_doc_qty_rcvd fc_svc_dsg org_cd doc_dt dsn doc_suf_cd fc cog ownr_cd rcpt_excpt_ty mcc actl_cnt_stow_qty matl_loctn | awk '{print$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,
+$16,$17,$18}' > foot
+cat -vet foot | sed s'/ /", "/g' | sed s'/XX/  /g' | sed s'/#/ /g' | sed 's/, "\$/, "", "/g' | sed s'/, "", "/) go/g' | sed 's,*, ,g'| sed s"/) go/, \"`cat finalheader`\") go/g" > feet
+echo "insert malsp_rcpt (doc_id, rcpt_gen_dt, rqst_no, rcpt_prcs_dt, cosal_ty_cd, source_ind, updt_cd, fsc, niin, smic, ui, rcpt_doc_qty_rcvd, fc_svc_dsg, org_cd, doc_dt, dsn, doc_suf_cd, fc, cog, ownr_cd, r
+cpt_excpt_ty, mcc, actl_cnt_stow_qty, matl_loctn, uic_from, suprt_pkg_serno) values (" > prehead
+cat heads | sed "s/X71/`cat prehead` X71 /g" > posthead
+paste posthead feet | sed s'/values ( X71 "/values ("X71"/g' > boots
+cat -vet boots | sed s'/"A", "C", "I",^I/"A", "C", "I", "/g' | sed 's,\$,,g' > /opt/sybase/DBISQL/JSS270_X71_INSERT.sql
