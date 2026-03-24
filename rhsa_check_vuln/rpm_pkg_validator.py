@@ -122,21 +122,21 @@ def find_expected_cves(finding, mapping, source_map, url_map):
 
 
 def validate(finding, mapping, source_map, url_map):
+    expected, ref_source, ref_url = find_expected_cves(
+        finding, mapping, source_map, url_map
+    )
+
     installed = rpm_installed(finding.package)
 
     if not installed:
         return (
             "PACKAGE_NOT_INSTALLED",
             "",
+            ",".join(sorted(expected)) if expected else "",
             "",
-            "",
-            "",
-            ""
+            ref_source,
+            ref_url
         )
-
-    expected, ref_source, ref_url = find_expected_cves(
-        finding, mapping, source_map, url_map
-    )
 
     if not ref_source:
         return (

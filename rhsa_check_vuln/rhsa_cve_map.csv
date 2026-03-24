@@ -1990,7 +1990,7 @@ RHSA-2025:0065,kernel,CVE-2023-54296,csaf_json,https://access.redhat.com/hydra/r
 RHSA-2025:0065,kernel,CVE-2024-53088,csaf_json,https://access.redhat.com/hydra/rest/securitydata/csaf/RHSA-2025:0065.json,200,
 RHSA-2025:0065,kernel,CVE-2024-53122,csaf_json,https://access.redhat.com/hydra/rest/securitydata/csaf/RHSA-2025:0065.json,200,
 RHSA-2025:0083,cups,CVE-2024-47175,csaf_json,https://access.redhat.com/hydra/rest/securitydata/csaf/RHSA-2025:0083.json,200,
-RHSA-2025:0288,Bug fix of NetworkManager,CVE-2024-3661,csaf_json,https://access.redhat.com/hydra/rest/securitydata/csaf/RHSA-2025:0288.json,200,
+RHSA-2025:0288,NetworkManager,CVE-2024-3661,csaf_json,https://access.redhat.com/hydra/rest/securitydata/csaf/RHSA-2025:0288.json,200,
 RHSA-2025:0325,rsync,CVE-2024-12085,csaf_json,https://access.redhat.com/hydra/rest/securitydata/csaf/RHSA-2025:0325.json,200,
 RHSA-2025:0711,python-jinja2,CVE-2024-56326,csaf_json,https://access.redhat.com/hydra/rest/securitydata/csaf/RHSA-2025:0711.json,200,
 RHSA-2025:0733,bzip2,CVE-2019-12900,csaf_json,https://access.redhat.com/hydra/rest/securitydata/csaf/RHSA-2025:0733.json,200,
