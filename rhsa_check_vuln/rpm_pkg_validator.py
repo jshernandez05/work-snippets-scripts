@@ -3,8 +3,6 @@ import csv
 import re
 import subprocess
 from pathlib import Path
-from typing import Dict, Set, Tuple, Optional, List
-
 
 CVE_PATTERN = re.compile(r"CVE-\d{4}-\d+", re.IGNORECASE)
 RHSA_PATTERN = re.compile(r"RHSA-\d{4}:\d+", re.IGNORECASE)
@@ -17,9 +15,6 @@ class Finding(object):
         self.package = package
         self.rhsa = rhsa
         self.severity = severity
-
-
-import subprocess
 
 
 def is_kernel_package(pkg):
