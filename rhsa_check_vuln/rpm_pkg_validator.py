@@ -19,6 +19,83 @@ class Finding(object):
         self.severity = severity
 
 
+import subprocess
+
+
+def is_kernel_package(pkg):
+    return pkg.startswith("kernel")
+
+
+def get_running_kernel():
+    result = subprocess.run(
+        ["uname", "-r"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
+    )
+    return result.stdout.strip()
+
+
+def get_installed_kernels():
+    result = subprocess.run(
+        ["rpm", "-q", "kernel-core"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
+    )
+
+    if result.returncode != 0:
+        return []
+
+    kernels = []
+    for line in result.stdout.splitlines():
+        # kernel-core-4.18.0-553.83.1.el8_10.x86_64
+        parts = line.split("kernel-core-")
+        if len(parts) == 2:
+            kernels.append(parts[1])
+
+    return kernels
+
+
+def kernel_version_key(version):
+    # simple comparable tuple
+    parts = re.split(r"[.-]", version)
+    return tuple(int(p) if p.isdigit() else p for p in parts)
+
+
+def is_version_newer_or_equal(v1, v2):
+    return kernel_version_key(v1) >= kernel_version_key(v2)
+
+
+def validate_kernel(finding):
+    running = get_running_kernel()
+    installed_kernels = get_installed_kernels()
+
+    if not installed_kernels:
+        return ("PACKAGE_NOT_INSTALLED", "", "", "", "", "")
+
+    newest_installed = sorted(installed_kernels, key=kernel_version_key)[-1]
+
+    if is_version_newer_or_equal(running, newest_installed):
+        return (
+            "VALIDATED_FIXED",
+            running,
+            "",
+            "",
+            "kernel_check",
+            "",
+        )
+
+    return (
+        "INSTALLED_NOT_RUNNING",
+        running,
+        "",
+        newest_installed,
+        "kernel_check",
+        "",
+    )
+
+
 def load_rhsa_map(path):
     """
     Returns:
@@ -125,6 +202,9 @@ def validate(finding, mapping, source_map, url_map):
     expected, ref_source, ref_url = find_expected_cves(
         finding, mapping, source_map, url_map
     )
+
+    if is_kernel_package(finding.package):
+        return validate_kernel(finding)
 
     installed = rpm_installed(finding.package)
 
@@ -242,7 +322,6 @@ def parse_acas(csv_path):
             )
 
     return findings
-
 
 def main():
     rhsa_map, source_map, url_map = load_rhsa_map(Path("rhsa_cve_map.csv"))
